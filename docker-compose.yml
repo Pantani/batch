@@ -4,19 +4,6 @@ networks:
   batch:
 
 services:
-  batch:
-    container_name: batch
-    hostname: batch
-    build: .
-    networks:
-      - batch
-    ports:
-      - 8889:8889
-    volumes:
-      - ./docker.env:/bin/.env
-    env_file:
-      - ./docker.env
-
   redis:
     image: redis:latest
     container_name: redis
@@ -30,3 +17,18 @@ services:
       REDIS_REPLICATION_MODE: master
     ports:
       - 6379:6379
+
+  batch:
+    container_name: batch
+    hostname: batch
+    build: .
+    networks:
+      - batch
+    ports:
+      - 8889:8889
+    volumes:
+      - ./docker.env:/bin/.env
+    env_file:
+      - ./docker.env
+    depends_on:
+      - redis
