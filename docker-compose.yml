@@ -1,0 +1,32 @@
+version: '3.7'
+
+networks:
+  batch:
+
+services:
+  batch:
+    container_name: batch
+    hostname: batch
+    build: .
+    networks:
+      - batch
+    ports:
+      - 8889:8889
+    volumes:
+      - ./docker.env:/bin/.env
+    env_file:
+      - ./docker.env
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    hostname: redis
+    networks:
+      - batch
+    command: redis-server --requirepass ${DATABASE_REDIS_PASSWORD}
+    env_file:
+      - ./docker.env
+    environment:
+      REDIS_REPLICATION_MODE: master
+    ports:
+      - 6379:6379

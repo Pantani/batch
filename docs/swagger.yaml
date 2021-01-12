@@ -1,0 +1,105 @@
+definitions:
+  api.errResponse:
+    properties:
+      error:
+        $ref: '#/definitions/api.errorDetails'
+    type: object
+  api.errorDetails:
+    properties:
+      message:
+        type: string
+    type: object
+  github.com_Pantani_batch_internal_api.errResponse:
+    properties:
+      error:
+        $ref: '#/definitions/github.com_Pantani_batch_internal_api.errorDetails'
+    type: object
+  github.com_Pantani_batch_internal_api.errorDetails:
+    properties:
+      message:
+        type: string
+    type: object
+  model.Batch:
+    properties:
+      created_at:
+        type: string
+      expires:
+        type: string
+      id:
+        type: integer
+      minimal_value:
+        type: integer
+      transactions:
+        items:
+          $ref: '#/definitions/model.Transaction'
+        type: array
+    type: object
+  model.Transaction:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      user_id:
+        type: integer
+      value:
+        type: integer
+    type: object
+info:
+  contact: {}
+  license: {}
+paths:
+  /batch:
+    get:
+      consumes:
+      - application/json
+      description: Get the pending current batch or by id
+      operationId: batch
+      parameters:
+      - default: 0
+        description: the batch id
+        in: query
+        name: id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Batch'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github.com_Pantani_batch_internal_api.errResponse'
+      summary: Get Batch
+      tags:
+      - Transactions
+  /transaction:
+    post:
+      consumes:
+      - application/json
+      description: Add a new transactions to batch
+      operationId: tx
+      parameters:
+      - description: The transaction details
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/model.Transaction'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Batch'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github.com_Pantani_batch_internal_api.errResponse'
+      summary: Add Transaction
+      tags:
+      - Transactions
+swagger: "2.0"
